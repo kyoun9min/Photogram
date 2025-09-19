@@ -16,7 +16,7 @@ public class ViewControllerTest {
 		return "auth/signin";
 	}
 	
-	@GetMapping("/image/story")
+	@GetMapping({"/", "/image/story"})
 	public String storyPage() {
 		return "image/story";
 	}
