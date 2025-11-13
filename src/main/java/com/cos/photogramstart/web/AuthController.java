@@ -3,19 +3,24 @@ package com.cos.photogramstart.web;
 import com.cos.photogramstart.domain.user.User;
 import com.cos.photogramstart.service.AuthService;
 import com.cos.photogramstart.web.dto.auth.SignupDto;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @RequiredArgsConstructor
 @Controller
 public class AuthController {
 
-    private static final Logger log = LoggerFactory.getLogger(AuthController.class);
-
+//    private static final Logger log = LoggerFactory.getLogger(AuthController.class);
     private final AuthService authService;
 
     @GetMapping("/auth/signin")
@@ -29,7 +34,17 @@ public class AuthController {
     }
 
     @PostMapping("/auth/signup")
-    public String signup(SignupDto signupDto) {
+    public String signup(@Valid SignupDto signupDto, BindingResult bindingResult) {
+
+        if (bindingResult.hasErrors()) {
+            Map<String, String> errorMap = new HashMap<>();
+
+            for (FieldError error : bindingResult.getFieldErrors()) {
+                errorMap.put(error.getField(), error.getDefaultMessage());
+                System.out.println("error.getField() = " + error.getField() + " / error.getDefaultMessage() = " + error.getDefaultMessage());
+            }
+        }
+
 //        log.info(String.valueOf(signupDto));
         User user = signupDto.toEntity();
         User userEntity = authService.회원가입(user);

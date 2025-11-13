@@ -19,17 +19,30 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @Column(unique = true)
+    @Column(length = 20, unique = true)
     private String username;
+
+    @Column(nullable = false)
     private String password;
+
+    @Column(nullable = false)
     private String name;
+
     private String website; // 웹 사이트
+
     private String bio; // 자기 소개
+
+    @Column(nullable = false)
     private String email;
+
     private String phone;
+
     private String gender;
+
     private String profileImageUrl; // 사진
+
     private String role; // 권한
+
     private LocalDateTime createDate;
 
     @PrePersist // 디비에 INSERT 되기 직전에 실행
