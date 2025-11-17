@@ -3,12 +3,13 @@ package com.cos.photogramstart.web.dto.auth;
 import com.cos.photogramstart.domain.user.User;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.Data;
 
 @Data
 public class SignupDto {
 
-    @Max(20)
+    @Size(min = 2, max = 20)
     private String username;
     @NotBlank
     private String password;
