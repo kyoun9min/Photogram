@@ -1,6 +1,7 @@
 package com.cos.photogramstart.handler;
 
 import com.cos.photogramstart.handler.ex.CustomValidationException;
+import com.cos.photogramstart.util.Script;
 import com.cos.photogramstart.web.dto.CMRespDto;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -13,7 +14,11 @@ import java.util.Map;
 public class ControllerExceptionHandler {
 
     @ExceptionHandler(CustomValidationException.class)
-    public CMRespDto<?> validationException(CustomValidationException e) {
-        return new CMRespDto<Map<String, String>>(-1, e.getMessage(), e.getErrorMap());
+    public String validationException(CustomValidationException e) {
+        // CMRespDto vs Script 비교
+        // 1. 클라이언트에게 응답할 때는 Script가 좋음 (브라우저에게 응답)
+        // 2. Ajax 통신 - CMRespDto (개발자에게 응답)
+        // 3. Android 통신 - CMRespDto (개발자에게 응답)
+        return Script.back(e.getErrorMap().toString());
     }
 }
