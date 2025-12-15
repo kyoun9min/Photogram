@@ -1,13 +1,16 @@
 package com.cos.photogramstart.web.dto.user;
 
 import com.cos.photogramstart.domain.user.User;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
 @Data
 public class UserUpdateDto {
 
-    private String name;
-    private String password;
+    @NotBlank
+    private String name; // 필수
+    @NotBlank
+    private String password; // 필수
     private String website;
     private String bio;
     private String phone;
