@@ -2,13 +2,12 @@ package com.cos.photogramstart.service;
 
 import com.cos.photogramstart.domain.user.User;
 import com.cos.photogramstart.domain.user.UserRepository;
+import com.cos.photogramstart.handler.ex.CustomException;
 import com.cos.photogramstart.handler.ex.CustomValidationApiException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.function.Supplier;
 
 @RequiredArgsConstructor
 @Service
@@ -16,6 +15,15 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
+
+    public User 회원프로필(int userId) {
+        // SELECT * FROM image WHERE userId = :userId;
+        User userEntity = userRepository.findById(userId).orElseThrow(() -> new CustomException("해당 프로필 페이지는 없는 페이지입니다."));
+        System.out.println("================================================================");
+        userEntity.getImages().get(0);
+        return userEntity;
+    }
+
     @Transactional
     public User 회원수정(int id, User user) {
         // 1. 영속화
