@@ -1,11 +1,9 @@
 package com.cos.photogramstart.domain.user;
 
 import com.cos.photogramstart.domain.image.Image;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -13,6 +11,7 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@ToString(exclude = "images")
 @Data
 @Entity
 public class User {
@@ -50,6 +49,7 @@ public class User {
     // Lazy = User를 Select할 때 해당 User id로 등록된 image들을 가져오지마 - 대신 getImages() 함수의 image들이 호출될 때 가져와!!
     // Eager = User를 Select할 때 해당 User id로 등록된 image들을 전부 Join해서 가져와!!
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    @JsonIgnoreProperties({"user"})
     private List<Image> images; // 양방향 매핑
 
     private LocalDateTime createDate;
