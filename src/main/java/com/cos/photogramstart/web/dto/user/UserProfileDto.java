@@ -16,5 +16,9 @@ public class UserProfileDto {
 
     private int imageCount;
 
+    private boolean subscribeState;
+
+    private int subscribeCount;
+
     private User user;
 }
