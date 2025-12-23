@@ -16,11 +16,10 @@ public class UserService {
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
+    @Transactional(readOnly = true)
     public User 회원프로필(int userId) {
         // SELECT * FROM image WHERE userId = :userId;
         User userEntity = userRepository.findById(userId).orElseThrow(() -> new CustomException("해당 프로필 페이지는 없는 페이지입니다."));
-        System.out.println("================================================================");
-        userEntity.getImages().get(0);
         return userEntity;
     }
 
