@@ -8,13 +8,15 @@
  */
 
 // (1) 스토리 로드하기
+let page = 0;
 function storyLoad() {
+
 	$.ajax({
-		url: `/api/image`,
+		url: `/api/image?page=${page}`,
 		dataType: "json"
 	}).done(res=> {
 		console.log(res);
-		res.data.forEach((image)=> {
+		res.data.content.forEach((image)=> {
 			let storyItem = getStoryItem(image);
 			$("#storyList").append(storyItem);
 		})
@@ -43,11 +45,11 @@ function getStoryItem(image) {
 \t\t<div class="sl__item__contents__icon">
 
 \t\t\t<button>
-\t\t\t\t<i class="fas fa-heart active" id="storyLikeIcon-1" onclick="toggleLike()"></i>
+\t\t\t\t<i class="fas fa-heart active" id="storyLikeIcon-${image.id}" onclick="toggleLike(${image.id})"></i>
 \t\t\t</button>
 \t\t</div>
 
-\t\t<span class="like"><b id="storyLikeCount-1">3 </b>likes</span>
+\t\t<span class="like"><b id="storyLikeCount-${image.id}">3 </b>likes</span>
 
 \t\t<div class="sl__item__contents__content">
 \t\t\t<p>${image.caption}</p>
@@ -80,13 +82,23 @@ function getStoryItem(image) {
 
 // (2) 스토리 스크롤 페이징하기
 $(window).scroll(() => {
+	// console.log("윈도우 scrollTop", $(window).scrollTop());
+	// console.log("문서의 높이", $(document).height());
+	// console.log("윈도우 높이", $(window).height());
 
+	let checkNum = $(window).scrollTop() - ($(document).height() - $(window).height());
+	// console.log(checkNum);
+
+	if (-1 < checkNum && checkNum < 1) {
+		page++;
+		storyLoad();
+	}
 });
 
 
 // (3) 좋아요, 안좋아요
-function toggleLike() {
-	let likeIcon = $("#storyLikeIcon-1");
+function toggleLike(imageId) {
+	let likeIcon = $(`#storyLikeIcon-${imageId}`);
 	if (likeIcon.hasClass("far")) {
 		likeIcon.addClass("fas");
 		likeIcon.addClass("active");
