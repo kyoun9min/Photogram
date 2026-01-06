@@ -29,6 +29,7 @@ public class Likes {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
+    // 무한 참조됨
     @JoinColumn(name = "imageId")
     @ManyToOne
     private Image image;

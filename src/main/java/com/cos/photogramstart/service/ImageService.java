@@ -26,6 +26,17 @@ public class ImageService {
     @Transactional(readOnly = true)
     public Page<Image> 이미지스토리(int principalId, Pageable pageable) {
         Page<Image> images = imageRepository.mStory(principalId, pageable);
+
+        // 2번(cos)으로 로그인
+        // images에 좋아요 상태 담기
+        images.forEach(image -> {
+            image.getLikes().forEach(likes -> {
+                if (likes.getUser().getId() == principalId) { // 해당 이미지에 좋아요한 사람들을 찾아서, 현재 로긴한 사람이 좋아요 한 것인지 비교
+                    image.setLikeState(true);
+                }
+            });
+        });
+
         return images;
     }
 
