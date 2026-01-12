@@ -32,6 +32,10 @@ public class UserService {
         int subscribeState = subscribeRepository.mSubscribeState(principalId, pageUserId);
         int subscribeCount = subscribeRepository.mSubscribeCount(pageUserId);
 
+        userEntity.getImages().forEach(image -> {
+            image.setLikeCount(image.getLikes().size());
+        });
+
         dto.setUser(userEntity);
         dto.setPageOwnerState(pageUserId == principalId);
         dto.setImageCount(userEntity.getImages().size());
