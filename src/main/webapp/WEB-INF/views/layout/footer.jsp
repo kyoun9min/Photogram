@@ -15,7 +15,7 @@
 			<li><a href="#a">위치</a></li>
 		</ul>
 		<div class="copy">
-			<p>© 2020 Photogram from There Programing</p>
+			<p>© 2026 Instagram from Meta</p>
 		</div>
 	</div>
 </footer>
