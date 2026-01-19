@@ -57,7 +57,7 @@ public class ImageService {
 
         UUID uuid = UUID.randomUUID(); // uuid
         String imageFileName = uuid + "_" + imageUploadDto.getFile().getOriginalFilename(); // 1.jpg
-        System.out.println("이미지 파일이름 : " + imageFileName);
+//        System.out.println("이미지 파일이름 : " + imageFileName);
 
         Path imageFilePath = Paths.get(uploadFolder + imageFileName);
 
@@ -72,6 +72,6 @@ public class ImageService {
         Image image = imageUploadDto.toEntity(imageFileName, principalDetails.getUser());
         Image imageEntity = imageRepository.save(image);
 
-        System.out.println("imageEntity = " + imageEntity);
+//        System.out.println("imageEntity = " + imageEntity);
     }
 }

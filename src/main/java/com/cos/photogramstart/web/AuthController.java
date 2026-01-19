@@ -50,7 +50,7 @@ public class AuthController {
     //        log.info(String.valueOf(signupDto));
             User user = signupDto.toEntity();
             User userEntity = authService.회원가입(user);
-            System.out.println("userEntity = " + userEntity);
+//            System.out.println("userEntity = " + userEntity);
     //        log.info(user.toString());
             return "auth/signin";
         }

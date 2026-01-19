@@ -37,7 +37,7 @@ public class UserService {
 
         UUID uuid = UUID.randomUUID(); // uuid
         String imageFileName = uuid + "_" + profileImageFile.getOriginalFilename(); // 1.jpg
-        System.out.println("이미지 파일이름 : " + imageFileName);
+//        System.out.println("이미지 파일이름 : " + imageFileName);
 
         Path imageFilePath = Paths.get(uploadFolder + imageFileName);
 
@@ -48,9 +48,7 @@ public class UserService {
             e.printStackTrace();
         }
 
-        User userEntity = userRepository.findById(principalId).orElseThrow(() -> {
-            throw new CustomApiException("유저를 찾을 수 없습니다.");
-        });
+        User userEntity = userRepository.findById(principalId).orElseThrow(() -> new CustomApiException("유저를 찾을 수 없습니다."));
         userEntity.setProfileImageUrl(imageFileName);
 
         return userEntity;
