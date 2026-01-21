@@ -38,22 +38,13 @@ public class AuthController {
     @PostMapping("/auth/signup")
     public String signup(@Valid SignupDto signupDto, BindingResult bindingResult) {
 
-        if (bindingResult.hasErrors()) {
-            Map<String, String> errorMap = new HashMap<>();
-
-            for (FieldError error : bindingResult.getFieldErrors()) {
-                errorMap.put(error.getField(), error.getDefaultMessage());
-            }
-            throw new CustomValidationException("유효성 검사 실패함", errorMap);
-        }
-        else {
-    //        log.info(String.valueOf(signupDto));
-            User user = signupDto.toEntity();
-            User userEntity = authService.회원가입(user);
+//        log.info(String.valueOf(signupDto));
+        User user = signupDto.toEntity();
+        authService.회원가입(user);
 //            System.out.println("userEntity = " + userEntity);
-    //        log.info(user.toString());
-            return "auth/signin";
-        }
+//        log.info(user.toString());
+        return "auth/signin";
+
 
     }
 
