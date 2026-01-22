@@ -36,5 +36,15 @@ spring:
       name: test
       password: 1234
 
+    oauth2:
+      client:
+        registration:
+          facebook:
+            clientId: 1423592399371858
+            clientSecret: REMOVED
+            scope:
+              - public_profile
+              - email
+
 file:
   path: C:/Users/Romero/Desktop/springworkspace/upload/
