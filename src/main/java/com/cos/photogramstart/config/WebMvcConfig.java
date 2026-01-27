@@ -20,7 +20,7 @@ public class WebMvcConfig implements WebMvcConfigurer { // web 설정 파일
         // file:///C:/Users/Romero/Desktop/springworkspace/upload/
         registry
                 .addResourceHandler("/upload/**") // jsp페이지에서 /upload/** 이런 주소 패턴이 나오면 발동
-                .addResourceLocations("file:///" + uploadFolder)
+                .addResourceLocations("file:" + uploadFolder)
                 .setCachePeriod(60 * 10 * 6) // 이미지 캐싱 1시간 (60 * 10 * 6초로 계산)
                 .resourceChain(true)
                 .addResolver(new PathResourceResolver());

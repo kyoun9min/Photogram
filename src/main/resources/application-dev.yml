@@ -1,0 +1,50 @@
+server:
+  port: 8080
+  servlet:
+    context-path: /
+    encoding:
+      charset: utf-8
+      enabled: true
+
+spring:
+  mvc:
+    view:
+      prefix: /WEB-INF/views/
+      suffix: .jsp
+
+  datasource:
+    driver-class-name: org.mariadb.jdbc.Driver
+    url: jdbc:mariadb://host.docker.internal:3307/photogram
+    username: cos
+    password: cos1234
+
+  jpa:
+    open-in-view: true
+    hibernate:
+      ddl-auto: create # create, update, none
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+    show-sql: true
+
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 2MB
+
+  security:
+    user:
+      name: test
+      password: 1234
+
+    oauth2:
+      client:
+        registration:
+          facebook:
+            clientId: 1423592399371858
+            clientSecret: REMOVED
+            scope:
+              - public_profile
+              - email
+
+file:
+  path: /upload/
