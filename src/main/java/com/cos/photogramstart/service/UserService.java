@@ -6,6 +6,7 @@ import com.cos.photogramstart.domain.user.UserRepository;
 import com.cos.photogramstart.handler.ex.CustomApiException;
 import com.cos.photogramstart.handler.ex.CustomException;
 import com.cos.photogramstart.handler.ex.CustomValidationApiException;
+import com.cos.photogramstart.s3.component.S3UrlResolver;
 import com.cos.photogramstart.web.dto.user.UserProfileDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -14,7 +15,11 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+import software.amazon.awssdk.core.sync.RequestBody;
+import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -30,16 +35,40 @@ public class UserService {
 
     private final PasswordEncoder bCryptPasswordEncoder;
 
-    @Value("${file.path}")
-    private String uploadFolder;
+    private final S3Client s3Client;
+
+    private final S3UrlResolver s3UrlResolver;
+
+    @Value("${s3.bucket}")
+    private String bucketName;
+
+//    @Value("${file.path}")
+//    private String uploadFolder;
 
     @Transactional
     public User 회원프로필사진변경(int principalId, MultipartFile profileImageFile) {
 
-        UUID uuid = UUID.randomUUID(); // uuid
-        String imageFileName = uuid + "_" + profileImageFile.getOriginalFilename(); // 1.jpg
-//        System.out.println("이미지 파일이름 : " + imageFileName);
+        UUID uuid = UUID.randomUUID();
+        String imageFileName = uuid + "_" + profileImageFile.getOriginalFilename();
 
+        try (InputStream is = profileImageFile.getInputStream()) {
+
+
+            PutObjectRequest putObjectRequest = PutObjectRequest.builder()
+                    .bucket(bucketName)
+                    .key(imageFileName)
+                    .acl("public-read") // 퍼블릭 접근
+                    .build();
+
+            s3Client.putObject(putObjectRequest,
+                    RequestBody.fromInputStream(is, profileImageFile.getSize()));
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new CustomApiException("사진 업로드에 실패했습니다.");
+        }
+
+        /** 로컬 파일 업로드
         Path imageFilePath = Paths.get(uploadFolder + imageFileName);
 
         // 통신, I/O -> 예외가 발생할 수 있다.
@@ -48,9 +77,10 @@ public class UserService {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        */
 
         User userEntity = userRepository.findById(principalId).orElseThrow(() -> new CustomApiException("유저를 찾을 수 없습니다."));
-        userEntity.setProfileImageUrl(imageFileName);
+        userEntity.setProfileImageUrl(imageFileName); // DB에는 파일명만 저장
 
         return userEntity;
     }
@@ -68,14 +98,16 @@ public class UserService {
 
         userEntity.getImages().forEach(image -> {
             image.setLikeCount(image.getLikes().size());
+            image.setS3PostImageUrl(s3UrlResolver.resolve(image.getPostImageUrl()));
         });
+
+        userEntity.setS3ProfileImageUrl(s3UrlResolver.resolve(userEntity.getProfileImageUrl()));
 
         dto.setUser(userEntity);
         dto.setPageOwnerState(pageUserId == principalId);
         dto.setImageCount(userEntity.getImages().size());
         dto.setSubscribeState(subscribeState == 1);
         dto.setSubscribeCount(subscribeCount);
-
 
         return dto;
     }
@@ -99,4 +131,9 @@ public class UserService {
 
         return userEntity;
     }
+
+    public String getProfileImageUrl(User user) {
+        return s3UrlResolver.resolve(user.getProfileImageUrl());
+    }
+
 }

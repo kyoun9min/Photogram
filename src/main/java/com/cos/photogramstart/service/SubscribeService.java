@@ -25,9 +25,9 @@ public class SubscribeService {
 
         StringBuffer sb = new StringBuffer();
         sb.append("SELECT u.id, u.username, u.profileImageUrl, ");
-        sb.append("if ((SELECT 1 FROM subscribe WHERE fromUserId = ? AND toUserId = u.id), 1, 0) subscribeState, ");
+        sb.append("if ((SELECT 1 FROM subscribe_tb WHERE fromUserId = ? AND toUserId = u.id), 1, 0) subscribeState, ");
         sb.append("if ((? = u.id), 1, 0) equalUserState ");
-        sb.append("FROM user u INNER JOIN subscribe s ");
+        sb.append("FROM user_tb u INNER JOIN subscribe_tb s ");
         sb.append("ON u.id = s.toUserId ");
         sb.append("WHERE s.fromUserId = ?"); // 세미콜론 첨부하면 안됨
 

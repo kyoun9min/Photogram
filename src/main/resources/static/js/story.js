@@ -41,7 +41,7 @@ function getStoryItem(image) {
 						\t</div>
 						
 						\t<div class="sl__item__img">
-						\t\t<img src="/upload/${image.postImageUrl}" />
+						\t\t<img src="${image.s3PostImageUrl}" />
 						\t</div>
 						
 						\t<div class="sl__item__contents">

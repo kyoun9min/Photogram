@@ -16,6 +16,7 @@ import java.util.List;
 @ToString(exclude = "user")
 @Data
 @Entity
+@Table(name = "image_tb")
 public class Image {
 
     @Id
@@ -47,6 +48,9 @@ public class Image {
 
     @Transient
     private int likeCount;
+
+    @Transient
+    private String s3PostImageUrl;
 
     private LocalDateTime createDate;
 

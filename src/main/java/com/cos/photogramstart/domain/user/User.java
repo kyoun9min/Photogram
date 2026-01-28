@@ -14,6 +14,7 @@ import java.util.List;
 @ToString(exclude = "images")
 @Data
 @Entity
+@Table(name = "user_tb")
 public class User {
 
     @Id
@@ -51,6 +52,9 @@ public class User {
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     @JsonIgnoreProperties({"user"})
     private List<Image> images; // 양방향 매핑
+
+    @Transient
+    private String s3ProfileImageUrl;
 
     private LocalDateTime createDate;
 

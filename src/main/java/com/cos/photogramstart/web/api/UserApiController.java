@@ -39,7 +39,10 @@ public class UserApiController {
                                                    @AuthenticationPrincipal PrincipalDetails principalDetails) {
         User userEntity = userService.회원프로필사진변경(principalId, profileImageFile);
         principalDetails.setUser(userEntity); // 세션 변경
-        return new ResponseEntity<>(new CMRespDto<>(1, "프로필사진 변경 성공", null), HttpStatus.OK);
+
+        // S3 URL 반환
+        String imageUrl = userService.getProfileImageUrl(userEntity);
+        return new ResponseEntity<>(new CMRespDto<>(1, "프로필사진 변경 성공", imageUrl), HttpStatus.OK);
     }
 
     @GetMapping("/api/user/{pageUserId}/subscribe")

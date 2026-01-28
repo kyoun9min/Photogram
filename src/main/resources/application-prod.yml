@@ -1,5 +1,5 @@
 server:
-  port: 8080
+  port: 5000
   servlet:
     context-path: /
     encoding:
@@ -14,14 +14,14 @@ spring:
 
   datasource:
     driver-class-name: org.mariadb.jdbc.Driver
-    url: jdbc:mariadb://host.docker.internal:3307/photogram
-    username: cos
-    password: cos1234
+    url: jdbc:mariadb://${RDS_HOST}:3306/photogram
+    username: ${RDS_USERNAME}
+    password: ${RDS_PASSWORD}
 
   jpa:
     open-in-view: true
     hibernate:
-      ddl-auto: create # create, update, none
+      ddl-auto: none # create, update, none
       naming:
         physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
     show-sql: true
@@ -46,5 +46,12 @@ spring:
               - public_profile
               - email
 
-file:
-  path: /upload/
+s3:
+  bucket: ${S3_BUCKET}
+  region: ${AWS_REGION}
+
+cloud:
+  aws:
+    credentials:
+      access-key: ${AWS_ACCESS_KEY_ID}
+      secret-key: ${AWS_SECRET_ACCESS_KEY}

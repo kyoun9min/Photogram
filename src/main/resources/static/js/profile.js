@@ -133,11 +133,15 @@ function profileImageUpload(pageUserId, principalId) {
 			dataType: "json"
 		}).done(res=>{
 			// 사진 전송 성공시 이미지 변경
+			$("#userProfileImage").attr("src", res.data); // res.data가 S3 URL
+
+			/** 로컬 방식
 			let reader = new FileReader();
 			reader.onload = (e) => {
 				$("#userProfileImage").attr("src", e.target.result);
 			}
 			reader.readAsDataURL(f); // 이 코드 실행시 reader.onload 실행됨.
+			*/
 
 		}).fail(error=>{
 			console.log("오류", error);

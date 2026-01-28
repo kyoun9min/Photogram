@@ -17,6 +17,7 @@ import java.time.LocalDateTime;
 @Data
 @Entity
 @Table(
+        name = "likes_tb",
         uniqueConstraints = {
                 @UniqueConstraint(
                         name = "likes_uk",
