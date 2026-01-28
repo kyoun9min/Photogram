@@ -4,7 +4,7 @@ RUN rm -rf /usr/local/tomcat/webapps/*
 
 COPY target/photogramstart-1.0.war /usr/local/tomcat/webapps/ROOT.war
 
-ENV SPRING_PROFILES_ACTIVE=dev
+ENV SPRING_PROFILES_ACTIVE=prod
 
 EXPOSE 8080
 

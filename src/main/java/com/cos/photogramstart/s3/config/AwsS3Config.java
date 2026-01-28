@@ -27,11 +27,11 @@ public class AwsS3Config {
     public S3Client s3Client() {
         return S3Client.builder()
                 .region(Region.of(region))
-                .credentialsProvider(
-                        StaticCredentialsProvider.create(
-                                AwsBasicCredentials.create(accessKey, secretKey)
-                        )
-                )
+//                .credentialsProvider(
+//                        StaticCredentialsProvider.create(
+//                                AwsBasicCredentials.create(accessKey, secretKey)
+//                        )
+//                )
                 .build();
     }
 }

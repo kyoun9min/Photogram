@@ -1,5 +1,5 @@
 server:
-  port: 5000
+  port: 8080
   servlet:
     context-path: /
     encoding:
@@ -50,8 +50,8 @@ s3:
   bucket: ${S3_BUCKET}
   region: ${AWS_REGION}
 
-cloud:
-  aws:
-    credentials:
-      access-key: ${AWS_ACCESS_KEY_ID}
-      secret-key: ${AWS_SECRET_ACCESS_KEY}
+#cloud:
+#  aws:
+#    credentials:
+#      access-key: ${AWS_ACCESS_KEY_ID}
+#      secret-key: ${AWS_SECRET_ACCESS_KEY}
