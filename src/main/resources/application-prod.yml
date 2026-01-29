@@ -14,7 +14,7 @@ spring:
 
   datasource:
     driver-class-name: org.mariadb.jdbc.Driver
-    url: jdbc:mariadb://${RDS_HOST}:3306/photogram
+    url: jdbc:mariadb://${RDS_HOST}:3306/photogram?useSSL=true&requireSSL=true
     username: ${RDS_USERNAME}
     password: ${RDS_PASSWORD}
 
