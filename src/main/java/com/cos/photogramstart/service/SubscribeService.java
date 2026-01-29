@@ -3,6 +3,8 @@ package com.cos.photogramstart.service;
 import com.cos.photogramstart.domain.subscribe.Subscribe;
 import com.cos.photogramstart.domain.subscribe.SubscribeRepository;
 import com.cos.photogramstart.handler.ex.CustomApiException;
+import com.cos.photogramstart.s3.component.S3UrlResolver;
+import com.cos.photogramstart.s3.config.AwsS3Config;
 import com.cos.photogramstart.web.dto.subscribe.SubscribeDto;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;
@@ -18,7 +20,10 @@ import java.util.List;
 public class SubscribeService {
 
     private final SubscribeRepository subscribeRepository;
+
     private final EntityManager em;
+
+    private final S3UrlResolver s3UrlResolver;
 
     @Transactional(readOnly = true)
     public List<SubscribeDto> 구독리스트(int principalId, int pageUserId) {
@@ -43,6 +48,10 @@ public class SubscribeService {
         // 쿼리 실행 (qlrm 라이브러리 필요 = Dto에 DB결과를 매핑하기 위해서)
         JpaResultMapper result = new JpaResultMapper();
         List<SubscribeDto> subscribeDtos = result.list(query, SubscribeDto.class);
+
+        subscribeDtos.forEach(subscribeDto -> {
+            subscribeDto.setProfileImageUrl(s3UrlResolver.resolve(subscribeDto.getProfileImageUrl()));
+        });
 
         return subscribeDtos;
     }
