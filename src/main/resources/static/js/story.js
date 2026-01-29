@@ -34,7 +34,7 @@ function getStoryItem(image) {
 	let item = `<div class="story-list__item">
 						\t<div class="sl__item__header">
 						\t\t<div>
-						\t\t\t<img class="profile-image" src="/upload/${image.user.profileImageUrl}"
+						\t\t\t<img class="profile-image" src="${image.user.s3ProfileImageUrl}"
 						\t\t\t\tonerror="this.src='/images/person.jpeg'" />
 						\t\t</div>
 						\t\t<div>${image.user.username}</div>

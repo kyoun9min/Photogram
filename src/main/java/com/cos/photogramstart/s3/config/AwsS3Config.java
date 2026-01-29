@@ -12,12 +12,12 @@ import software.amazon.awssdk.services.s3.S3Client;
 @Configuration
 public class AwsS3Config {
 
-    @Value("${cloud.aws.credentials.access-key}")
-    private String accessKey;
+//    @Value("${cloud.aws.credentials.access-key}")
+//    private String accessKey;
 
 
-    @Value("${cloud.aws.credentials.secret-key}")
-    private String secretKey;
+//    @Value("${cloud.aws.credentials.secret-key}")
+//    private String secretKey;
 
 
     @Value("${s3.region}")

@@ -63,8 +63,9 @@ public class ImageService {
                     image.setLikeState(true);
                 }
             });
-            // S3 URL로 변환
-            image.setS3PostImageUrl(s3UrlResolver.resolve(image.getPostImageUrl()));
+
+            image.setS3PostImageUrl(s3UrlResolver.resolve(image.getPostImageUrl())); // 게시물 이미지 S3 URL로 변환
+            image.getUser().setS3ProfileImageUrl(s3UrlResolver.resolve(image.getUser().getProfileImageUrl())); // 작성자 프로필 이미지 S3 URL로 변환
         });
 
         return images;
