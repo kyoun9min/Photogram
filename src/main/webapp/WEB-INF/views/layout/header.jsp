@@ -43,6 +43,11 @@
 			<a href="/" class="logo">
 				<img src="/images/logo.jpg" alt="">
 			</a>
+			<div class="search-box">
+				<input type="text" id="searchInput" placeholder="검색">
+				<div id="searchResult" class="search-result">
+				</div>
+			</div>
 			<nav class="navi">
 				<ul class="navi-list">
 					<li class="navi-item"><a href="/">
@@ -58,3 +63,6 @@
 			</nav>
 		</div>
 	</header>
+
+	<script src="/js/header.js"></script>
+

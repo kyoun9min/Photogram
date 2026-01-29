@@ -54,3 +54,80 @@
     width: 100%;
   }
 }
+
+/* 검색창 컨테이너: 로고와 메뉴 사이 공간 차지 */
+.search-box {
+  position: relative; /* 결과창(.search-result)의 기준점 */
+  width: 250px;
+}
+
+/* 입력 필드 디자인 */
+#searchInput {
+  width: 100%;
+  height: 28px;
+  background-color: #efefef;
+  border-radius: 8px;
+  border: none;
+  padding: 0 15px;
+  text-align: center; /* 인스타 감성: 가운데 정렬 */
+  font-size: 14px;
+}
+
+#searchInput:focus {
+  text-align: left; /* 클릭하면 글자 왼쪽으로 */
+}
+
+/* 실시간 검색 결과창 */
+.search-result {
+  position: absolute;
+  top: 35px; /* 입력창 아래 살짝 띄우기 */
+  left: 50%;
+  transform: translateX(-50%); /* 정확히 가운데 정렬 */
+  width: 300px; /* 입력창보다 조금 넓게 설정 가능 */
+  background-color: white;
+  border: 1px solid #dbdbdb;
+  border-radius: 6px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  max-height: 400px;
+  overflow-y: auto;
+  z-index: 100;
+  display: none; /* 기본은 숨김 */
+}
+
+/* 개별 유저 아이템 */
+.search-item {
+  display: flex;
+  align-items: center;
+  padding: 10px 15px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.search-item:hover {
+  background-color: #fafafa;
+}
+
+.search-item img {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 1px solid #dbdbdb;
+  margin-right: 12px;
+  object-fit: cover;
+}
+
+.search-item-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.search-item-text .name {
+  font-size: 14px;
+  font-weight: 600;
+  color: #262626;
+}
+
+.search-item-text .username {
+  font-size: 14px;
+  color: #8e8e8e;
+}

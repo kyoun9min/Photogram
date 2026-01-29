@@ -8,6 +8,7 @@ import com.cos.photogramstart.handler.ex.CustomException;
 import com.cos.photogramstart.handler.ex.CustomValidationApiException;
 import com.cos.photogramstart.s3.component.S3UrlResolver;
 import com.cos.photogramstart.web.dto.user.UserProfileDto;
+import com.cos.photogramstart.web.dto.user.UserSearchDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -23,7 +24,9 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -130,6 +133,21 @@ public class UserService {
         userEntity.setGender(user.getGender());
 
         return userEntity;
+    }
+
+    @Transactional(readOnly = true)
+    public List<UserSearchDto> 회원검색(String name) {
+
+        List<User> users = userRepository.findByNameContaining(name);
+
+        // 엔티티 리스트를 DTO 리스트로 변환
+        return users.stream().map(user -> UserSearchDto.builder()
+                .id(user.getId())
+                .username(user.getUsername())
+                .name(user.getName())
+                .s3ProfileImageUrl(s3UrlResolver.resolve(user.getProfileImageUrl()))
+                .build()
+        ).collect(Collectors.toList());
     }
 
     public String getProfileImageUrl(User user) {
