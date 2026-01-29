@@ -40,8 +40,8 @@ spring:
       client:
         registration:
           facebook:
-            clientId: gfdgfd414 #${FB_APP_ID}
-            clientSecret: dbcvbdfsdf1231 #${FB_APP_SECRET}
+            clientId: ${FB_APP_ID}
+            clientSecret: ${FB_APP_SECRET}
             scope:
               - public_profile
               - email
@@ -50,5 +50,5 @@ file:
   path: /upload/
 
 s3:
-  bucket: dfgdfgdfgdfg23123
-  region: gdfgdfsgdfsg123
+  bucket: ${S3_BUCKET}
+  region: ${AWS_REGION}
