@@ -3,6 +3,7 @@ name: CI/CD Deploy to EC2
 on:
   push:
     branches: [ "master" ] # 본인의 메인 브랜치명 확인 (main 또는 master)
+  workflow_dispatch:         # 수동 실행 버튼 추가
 
 jobs:
   build-and-deploy:
