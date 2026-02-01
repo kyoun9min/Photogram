@@ -77,6 +77,14 @@ public class ImageService {
     @Transactional
     public void 사진업로드(ImageUploadDto imageUploadDto, PrincipalDetails principalDetails) {
 
+        // 파일 확장자 체크 (MIME 타입 확인)
+        String contentType = imageUploadDto.getFile().getContentType();
+
+        // image/jpeg, image/png, image/gif 등 "image/"로 시작하는지 확인
+        if (contentType == null || !contentType.startsWith("image/")) {
+            throw new CustomException("이미지 파일만 업로드 가능합니다.");
+        }
+
         UUID uuid = UUID.randomUUID();
         String imageFileName = uuid + "_" + imageUploadDto.getFile().getOriginalFilename();
 
@@ -85,6 +93,7 @@ public class ImageService {
             PutObjectRequest putObjectRequest = PutObjectRequest.builder()
                     .bucket(bucketName)
                     .key(imageFileName)
+                    .contentType(contentType)
                     .acl("public-read") // 필수! 그래야 퍼블릭 URL 접근 가능
                     .build();
 
