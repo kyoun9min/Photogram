@@ -20,11 +20,15 @@ spring:
 
   jpa:
     open-in-view: true
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: false
+        use_sql_comments: true
     hibernate:
-      ddl-auto: none # create, update, none
+      ddl-auto: none
       naming:
         physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
-    show-sql: true
 
   servlet:
     multipart:

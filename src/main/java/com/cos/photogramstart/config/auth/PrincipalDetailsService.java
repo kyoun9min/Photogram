@@ -22,7 +22,7 @@ public class PrincipalDetailsService implements UserDetailsService {
         User userEntity = userRepository.findByUsername(username);
 
         if (userEntity == null) {
-            return null;
+            throw new UsernameNotFoundException("사용자를 찾을 수 없습니다: " + username);
         }
         else {
             return new PrincipalDetails(userEntity);

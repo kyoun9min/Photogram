@@ -6,12 +6,13 @@ import org.springframework.security.core.userdetails.UserDetails;
 import com.cos.photogramstart.domain.user.User;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Map;
 
 @Data
-public class PrincipalDetails implements UserDetails, OAuth2User {
+public class PrincipalDetails implements UserDetails, OAuth2User, Serializable {
 
     public static final long serialVersionUID = 1L;
 

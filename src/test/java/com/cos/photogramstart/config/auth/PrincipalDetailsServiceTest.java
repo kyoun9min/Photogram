@@ -9,9 +9,10 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -49,17 +50,19 @@ class PrincipalDetailsServiceTest {
     }
 
     @Test
-    @DisplayName("존재하지 않는 아이디로 로그인 시 null을 반환한다")
+    @DisplayName("존재하지 않는 아이디로 로그인 시 UsernameNotFoundException이 발생한다")
     void loadUserByUsername_실패() {
         // given
         String username = "unknown";
         given(userRepository.findByUsername(username)).willReturn(null);
 
-        // when
-        UserDetails userDetails = principalDetailsService.loadUserByUsername(username);
+        // when & then
+        assertThatThrownBy(() ->
+                principalDetailsService.loadUserByUsername(username)
+        ).isInstanceOf(UsernameNotFoundException.class)
+                .hasMessageContaining("사용자를 찾을 수 없습니다:")
+                .hasMessageContaining(username);
 
-        // then
-        assertThat(userDetails).isNull();
         verify(userRepository, times(1)).findByUsername(username);
     }
 }

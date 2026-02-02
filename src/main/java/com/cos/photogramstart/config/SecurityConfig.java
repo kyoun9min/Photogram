@@ -1,6 +1,7 @@
 package com.cos.photogramstart.config;
 
 import com.cos.photogramstart.config.oauth.OAuth2DetailsService;
+import com.cos.photogramstart.handler.CustomAuthFailureHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -12,6 +13,8 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SecurityConfig {
 
     private final OAuth2DetailsService oAuth2DetailsService;
+
+    private final CustomAuthFailureHandler customAuthFailureHandler;
 
     @Bean
     SecurityFilterChain configure(HttpSecurity http) throws Exception {
@@ -28,6 +31,7 @@ public class SecurityConfig {
                 .loginPage("/auth/signin") // GET
                 .loginProcessingUrl("/auth/signin") // POST
                 .defaultSuccessUrl("/")
+                .failureHandler(customAuthFailureHandler)
         );
 
         http.oauth2Login(oauth2 -> oauth2
