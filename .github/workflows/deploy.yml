@@ -46,15 +46,15 @@ jobs:
           script: |
             # 1. 최신 이미지 받아오기
             docker pull segovita/photogram:latest
-            
-            # 2. 기존 컨테이너가 있다면 끄고 삭제
-            docker stop photogram-container || true
-            docker rm photogram-container || true
-            
-            # 3. 새 컨테이너 실행 (환경변수 싹 다 주입!)
+                        
+            # 2. 첫 번째 WAS (8080) 교체
+            echo "Starting WAS-1 (Port: 8080)..."
+            docker stop photogram-container-1 || true
+            docker rm photogram-container-1 || true
             docker run -d -p 8080:8080 \
-              --name photogram-container \
+              --name photogram-container-1 \
               -e SPRING_PROFILES_ACTIVE=prod \
+              -e JAVA_OPTS="-Xmx256m -Xms256m" \
               -e RDS_HOST=${{ secrets.RDS_HOST }} \
               -e RDS_USERNAME=${{ secrets.RDS_USERNAME }} \
               -e RDS_PASSWORD=${{ secrets.RDS_PASSWORD }} \
@@ -62,7 +62,30 @@ jobs:
               -e AWS_REGION=ap-northeast-2 \
               -e FB_APP_ID=${{ secrets.FB_APP_ID }} \
               -e FB_APP_SECRET=${{ secrets.FB_APP_SECRET }} \
+              -e REDIS_HOST=${{ secrets.REDIS_HOST }} \
               segovita/photogram:latest
-            
+
+            # 첫 번째 컨테이너가 뜰 시간을 벌어줍니다 (t3.micro 속도 고려)
+            echo "Waiting for WAS-1 to stabilize..."
+            sleep 30
+
+            # 3. 두 번째 WAS (8081) 교체
+            echo "Starting WAS-2 (Port: 8081)..."
+            docker stop photogram-container-2 || true
+            docker rm photogram-container-2 || true
+            docker run -d -p 8081:8080 \
+              --name photogram-container-2 \
+              -e SPRING_PROFILES_ACTIVE=prod \
+              -e JAVA_OPTS="-Xmx256m -Xms256m" \
+              -e RDS_HOST=${{ secrets.RDS_HOST }} \
+              -e RDS_USERNAME=${{ secrets.RDS_USERNAME }} \
+              -e RDS_PASSWORD=${{ secrets.RDS_PASSWORD }} \
+              -e S3_BUCKET=${{ secrets.S3_BUCKET }} \
+              -e AWS_REGION=ap-northeast-2 \
+              -e FB_APP_ID=${{ secrets.FB_APP_ID }} \
+              -e FB_APP_SECRET=${{ secrets.FB_APP_SECRET }} \
+              -e REDIS_HOST=${{ secrets.REDIS_HOST }} \
+              segovita/photogram:latest
+                        
             # 4. 안 쓰는 (이름 없는) 이미지 싹 정리
             docker image prune -f

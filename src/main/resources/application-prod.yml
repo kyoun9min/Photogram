@@ -46,6 +46,15 @@ spring:
               - public_profile
               - email
 
+  session:
+    store-type: redis # 세션 저장소를 Redis로 지정
+    redis:
+      namespace: spring:session # (옵션) Redis 내 세션 키의 접두사
+  data:
+    redis:
+      host: ${REDIS_HOST}    # Redis EC2의 프라이빗 IP
+      port: 6379             # 기본 포트
+
 s3:
   bucket: ${S3_BUCKET}
   region: ${AWS_REGION}
