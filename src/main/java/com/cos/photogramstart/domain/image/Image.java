@@ -16,7 +16,12 @@ import java.util.List;
 @ToString(exclude = "user")
 @Data
 @Entity
-@Table(name = "image_tb")
+@Table(
+        name = "image_tb",
+        indexes = {
+                @Index(name = "idx_image_user_createdate", columnList = "userId, createDate DESC")
+        }
+)
 public class Image {
 
     @Id

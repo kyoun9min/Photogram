@@ -21,6 +21,9 @@ import java.time.LocalDateTime;
                         name = "subscribe_uk",
                         columnNames = {"fromUserId", "toUserId"}
                 )
+        },
+        indexes = {
+                @Index(name = "idx_subscribe_fromuser", columnList = "fromUserId")
         }
 )
 public class Subscribe {
