@@ -25,11 +25,7 @@ public class ImageApiController {
     @GetMapping("/api/image")
     public ResponseEntity<?> imageStory(@AuthenticationPrincipal PrincipalDetails principalDetails,
                                         @PageableDefault(size = 3, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
-
-        // [임시 수정] 부하 테스트를 위해 인증 객체가 없으면 12번 유저로 간주
-        int principalId = (principalDetails == null) ? 12 : principalDetails.getUser().getId();
-
-        StoryResponseDto images = imageService.이미지스토리(principalId, pageable);
+        StoryResponseDto images = imageService.이미지스토리(principalDetails.getUser().getId(), pageable);
         return new ResponseEntity<>(new CMRespDto<>(1, "성공", images), HttpStatus.OK);
     }
 
