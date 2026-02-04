@@ -27,7 +27,7 @@ spring:
         format_sql: false
         use_sql_comments: true
     hibernate:
-      ddl-auto: update
+      ddl-auto: none
       naming:
         physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
 
@@ -60,6 +60,8 @@ spring:
       host: ${REDIS_HOST}    # Redis EC2의 프라이빗 IP
       port: 6379             # 기본 포트
 
+  cache:
+    type: redis
 s3:
   bucket: ${S3_BUCKET}
   region: ${AWS_REGION}

@@ -34,10 +34,10 @@ function getStoryItem(image) {
 	let item = `<div class="story-list__item">
 						\t<div class="sl__item__header">
 						\t\t<div>
-						\t\t\t<img class="profile-image" src="${image.user.s3ProfileImageUrl}"
+						\t\t\t<img class="profile-image" src="${image.s3ProfileImageUrl}"
 						\t\t\t\tonerror="this.src='/images/person.jpeg'" />
 						\t\t</div>
-						\t\t<div>${image.user.username}</div>
+						\t\t<div>${image.username}</div>
 						\t</div>
 						
 						\t<div class="sl__item__img">
@@ -71,10 +71,10 @@ function getStoryItem(image) {
 				image.comments.forEach((comment)=>{
 					item += `\t\t\t<div class="sl__item__contents__comment" id="storyCommentItem-${comment.id}">
 			\t\t\t\t<p>
-			\t\t\t\t\t<b>${comment.user.username} :</b> ${comment.content}
+			\t\t\t\t\t<b>${comment.commentUsername} :</b> ${comment.content}
 			\t\t\t\t</p>`;
 
-		if(principalId == comment.user.id){
+		if(principalId == comment.commentUserId){
 			item += `\t\t\t\t<button onclick="deleteComment(${comment.id})">
 					 \t\t\t\t\t<i class="fas fa-times"></i>
 					 \t\t\t\t</button>`;

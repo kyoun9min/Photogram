@@ -6,8 +6,12 @@ import com.cos.photogramstart.domain.image.ImageRepository;
 import com.cos.photogramstart.handler.ex.CustomException;
 import com.cos.photogramstart.s3.component.S3UrlResolver;
 import com.cos.photogramstart.web.dto.image.ImageUploadDto;
+import com.cos.photogramstart.web.dto.story.StoryDto;
+import com.cos.photogramstart.web.dto.story.StoryResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -17,11 +21,9 @@ import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 
 import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -48,33 +50,49 @@ public class ImageService {
     }
 
     @Transactional(readOnly = true)
-    public Page<Image> 이미지스토리(int principalId, Pageable pageable) {
+    @Cacheable(
+            value = "imageStory",
+            key = "#principalId + '_' + #pageable.pageNumber",
+            cacheManager = "cacheManager"
+    )
+    public StoryResponseDto 이미지스토리(int principalId, Pageable pageable) {
 
         Page<Image> images = imageRepository.mStory(principalId, pageable);
 
-        // 2번(cos)으로 로그인
-        // images에 좋아요 상태 담기
-        images.forEach(image -> {
+        // 1. Image -> StoryDto 가공
+        List<StoryDto> storyDtos = images.getContent().stream().map(image -> {
+            return StoryDto.builder()
+                    .id(image.getId())
+                    .caption(image.getCaption())
+                    .s3PostImageUrl(s3UrlResolver.resolve(image.getPostImageUrl()))
+                    .username(image.getUser().getUsername())
+                    .s3ProfileImageUrl(s3UrlResolver.resolve(image.getUser().getProfileImageUrl()))
+                    .likeCount(image.getLikes().size())
+                    .likeState(image.getLikes().stream().anyMatch(l -> l.getUser().getId() == principalId))
+                    .comments(image.getComments().stream().map(c ->
+                            StoryDto.CommentDto.builder()
+                                    .id(c.getId())
+                                    .content(c.getContent())
+                                    .commentUsername(c.getUser().getUsername())
+                                    .commentUserId(c.getUser().getId())
+                                    .build()
+                    ).collect(Collectors.toList()))
+                    .build();
+        }).collect(Collectors.toList());
 
-            image.setLikeCount(image.getLikes().size());
-
-            image.getLikes().forEach(likes -> {
-                if (likes.getUser().getId() == principalId) { // 해당 이미지에 좋아요한 사람들을 찾아서, 현재 로긴한 사람이 좋아요 한 것인지 비교
-                    image.setLikeState(true);
-                }
-            });
-
-            image.setS3PostImageUrl(s3UrlResolver.resolve(image.getPostImageUrl())); // 게시물 이미지 S3 URL로 변환
-            image.getUser().setS3ProfileImageUrl(s3UrlResolver.resolve(image.getUser().getProfileImageUrl())); // 작성자 프로필 이미지 S3 URL로 변환
-        });
-
-        return images;
+        // 2. 가공된 리스트와 페이징 정보를 DTO에 담아서 리턴
+        return StoryResponseDto.builder()
+                .content(storyDtos)
+                .last(images.isLast())
+                .number(images.getNumber())
+                .build();
     }
 
 //    @Value("${file.path}")
 //    private String uploadFolder;
 
     @Transactional
+    @CacheEvict(value = "imageStory", allEntries = true)
     public void 사진업로드(ImageUploadDto imageUploadDto, PrincipalDetails principalDetails) {
 
         // 파일 확장자 체크 (MIME 타입 확인)
